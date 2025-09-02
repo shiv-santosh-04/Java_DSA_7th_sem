@@ -62,6 +62,60 @@ class SSL {
         size++;
     }
 
+    void deleteAtHead() {
+        if (head != null) {
+            head = head.next;
+            size--;
+        }
+    }
+
+    void deleteAtPosition(int position) {
+        if (position < 1 || position > size) {
+            System.out.println("Invalid position for deletion.");
+            return;
+        }
+        if (position == 1) {
+            deleteAtHead();
+            return;
+        }
+
+        Node current = head;
+        for (int i = 1; i < position - 1; i++) {
+            current = current.next;
+        }
+
+        Node nodeToDelete = current.next;
+        current.next = nodeToDelete.next;
+        size--;
+    }
+
+    void deleteByValue(int value) {
+        // Case 1: The head node is the one to be deleted
+        if (head != null && head.data == value) {
+            deleteAtHead();
+            return;
+        }
+
+        // Case 2: The node is somewhere in the middle or at the tail
+        Node current = head;
+        Node previous = null;
+
+        while (current != null && current.data != value) {
+            previous = current;
+            current = current.next;
+        }
+
+        // If the value was not found in the list
+        if (current == null) {
+            System.out.println("Node with value " + value + " not found.");
+            return;
+        }
+
+        // Unlink the node from the list
+        previous.next = current.next;
+        size--;
+    }
+
     void printList() {
         Node current = head;
         while (current != null) {
@@ -77,20 +131,22 @@ class Drivercode {
         SSL ssl = new SSL();
         ssl.insertAtTail(10);
         ssl.insertAtTail(20);
+        ssl.insertAtTail(30);
         ssl.insertAtTail(40);
-        ssl.insertAtTail(50);
 
         System.out.println("Original Linked List:");
-        ssl.printList(); // Output: 10 -> 20 -> 40 -> 50 -> null
+        ssl.printList(); // 10 -> 20 -> 30 -> 40 -> null
 
-        // Insert 30 at position 3
-        ssl.insertAtPosition(30, 3);
-        System.out.println("\nLinked List after inserting 30 at position 3:");
-        ssl.printList(); // Output: 10 -> 20 -> 30 -> 40 -> 50 -> null
+        ssl.deleteByValue(30);
+        System.out.println("\nLinked List after deleting 30:");
+        ssl.printList(); // 10 -> 20 -> 40 -> null
 
-        // Insert 5 at position 1 (head)
-        ssl.insertAtPosition(5, 1);
-        System.out.println("\nLinked List after inserting 5 at position 1:");
-        ssl.printList(); // Output: 5 -> 10 -> 20 -> 30 -> 40 -> 50 -> null
+        ssl.deleteByValue(10);
+        System.out.println("\nLinked List after deleting 10:");
+        ssl.printList(); // 20 -> 40 -> null
+
+        ssl.deleteByValue(50);
+        System.out.println("\nLinked List after trying to delete 50 (not found):");
+        ssl.printList(); // 20 -> 40 -> null
     }
 }
